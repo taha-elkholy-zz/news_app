@@ -2,11 +2,17 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:my_news_app/shared/bloc_observer.dart';
+import 'package:my_news_app/shared/network/remote/dio_helper.dart';
 
 import 'layout/news_layout/news_layout.dart';
 
 void main() {
+  // use BlocObserver to look at code
   Bloc.observer = MyBlocObserver();
+
+  // initialize the dio here
+  DioHelper.init();
+
   runApp(MyApp());
 }
 
@@ -17,6 +23,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        primarySwatch: Colors.deepOrange,
+        floatingActionButtonTheme: FloatingActionButtonThemeData(
+          backgroundColor: Colors.deepOrange
+        ),
         scaffoldBackgroundColor: Colors.white,
         appBarTheme: AppBarTheme(
             // backwardsCompatibility false make me
@@ -70,7 +80,7 @@ class MyApp extends StatelessWidget {
             unselectedItemColor: Colors.grey,
             elevation: 20.0),
       ),
-      themeMode: ThemeMode.dark,
+      themeMode: ThemeMode.light,
       home: NewsLayout(),
     );
   }
