@@ -1,4 +1,3 @@
-
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -6,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_news_app/layout/news_layout/cubit/states.dart';
 import 'package:my_news_app/modules/business/business_screen.dart';
 import 'package:my_news_app/modules/science/science_screen.dart';
-import 'package:my_news_app/modules/settings/settings_screen.dart';
 import 'package:my_news_app/modules/sports/sports_screen.dart';
 import 'package:my_news_app/shared/network/remote/dio_helper.dart';
 
@@ -22,6 +20,12 @@ class NewsCubit extends Cubit<NewsStates> {
 
   void changeBottomNaveBarIndex(int index) {
     currentIndex = index;
+    // get data of the 1 & 2 index here
+    if (index == 1) {
+      getSports();
+    } else if (index == 2) {
+      getScience();
+    }
     emit(NewsBottomNavState());
   }
 
@@ -30,7 +34,6 @@ class NewsCubit extends Cubit<NewsStates> {
     'Business',
     'Sports',
     'Science',
-    'Settings',
   ];
 
   // list of screens will shown on news layout
@@ -38,7 +41,6 @@ class NewsCubit extends Cubit<NewsStates> {
     BusinessScreen(),
     SportsScreen(),
     ScienceScreen(),
-    SettingsScreen()
   ];
 
 // list of BottomNavigationBarItem
@@ -55,32 +57,87 @@ class NewsCubit extends Cubit<NewsStates> {
       icon: Icon(Icons.science),
       label: 'Science',
     ),
-    BottomNavigationBarItem(
-      icon: Icon(Icons.settings),
-      label: 'Settings',
-    ),
   ];
+
+  // light & dark mode
+  bool isDark = false;
+
+  void changeAppMode() {
+    isDark = !isDark;
+    emit(NewsChangeModeState());
+  }
 
   // List of business articles
   List<dynamic> business = [];
-  void getBusiness(){
+
+  void getBusiness() {
     //loading
     emit(NewsGetBusinessLoadingState());
-    
-    DioHelper.getData(
-        url: 'v2/top-headlines',
-        query: {
-          'country':'eg',
-          'category':'business',
-          'apikey':'875465faa7d94a638da55e846be8701b',
-        }).then((value) {
-      business.addAll(value.data['articles']);
-
+    if (business.length == 0) {
+      DioHelper.getData(url: 'v2/top-headlines', query: {
+        'country': 'eg',
+        'category': 'business',
+        'apikey': '875465faa7d94a638da55e846be8701b',
+      }).then((value) {
+        business = value.data['articles'];
+        emit(NewsGetBusinessSuccessState());
+        print('success');
+      }).catchError((error) {
+        emit(NewsGetBusinessErrorState(error.toString()));
+        print('Error is : ${error.toString()}');
+      });
+    } else {
       emit(NewsGetBusinessSuccessState());
-      print('success');
-    }).catchError((error){
-      emit(NewsGetBusinessErrorState(error.toString()));
-      print('Error is : ${error.toString()}');
-    });
+    }
+  }
+
+  // List of business articles
+  List<dynamic> science = [];
+
+  void getScience() {
+    //loading
+    emit(NewsGetScienceLoadingState());
+    if (science.length == 0) {
+      DioHelper.getData(url: 'v2/top-headlines', query: {
+        'country': 'eg',
+        'category': 'science',
+        'apikey': '875465faa7d94a638da55e846be8701b',
+      }).then((value) {
+        science = value.data['articles'];
+
+        emit(NewsGetScienceSuccessState());
+        print('success');
+      }).catchError((error) {
+        emit(NewsGetScienceErrorState(error.toString()));
+        print('Error is : ${error.toString()}');
+      });
+    } else {
+      emit(NewsGetScienceSuccessState());
+    }
+  }
+
+  // List of business articles
+  List<dynamic> sports = [];
+
+  void getSports() {
+    //loading
+    emit(NewsGetSportsLoadingState());
+    if (sports.length == 0) {
+      DioHelper.getData(url: 'v2/top-headlines', query: {
+        'country': 'eg',
+        'category': 'sports',
+        'apikey': '875465faa7d94a638da55e846be8701b',
+      }).then((value) {
+        sports = value.data['articles'];
+
+        emit(NewsGetSportsSuccessState());
+        print('success ${sports.length}');
+      }).catchError((error) {
+        emit(NewsGetSportsErrorState(error.toString()));
+        print('Error is : ${error.toString()}');
+      });
+    } else {
+      emit(NewsGetSportsSuccessState());
+    }
   }
 }
