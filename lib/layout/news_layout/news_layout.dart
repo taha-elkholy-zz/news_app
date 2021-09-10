@@ -1,4 +1,3 @@
-
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,33 +10,36 @@ class NewsLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<NewsCubit, NewsStates>(
-      listener: (context, state){},
-      builder: (context, state){
+      listener: (context, state) {},
+      builder: (context, state) {
         NewsCubit cubit = NewsCubit.get(context);
         return Scaffold(
           appBar: AppBar(
             title: Text(cubit.titles[cubit.currentIndex]),
             actions: [
-              IconButton(icon: Icon(Icons.search), onPressed: (){}),
+              IconButton(icon: Icon(Icons.search), onPressed: () {}),
               IconButton(
                   icon: Icon(Icons.brightness_4_outlined),
-                  onPressed: (){
+                  onPressed: () {
                     NewsCubit.get(context).changeAppMode();
-              }),
+                  }),
             ],
           ),
-          body:ConditionalBuilder(
+          body: ConditionalBuilder(
               condition: true,
               builder: (context) => cubit.screens[cubit.currentIndex],
-              fallback: (context) => Center(child: CircularProgressIndicator(),)),
+              fallback: (context) => Center(
+                    child: CircularProgressIndicator(),
+                  )),
           bottomNavigationBar: BottomNavigationBar(
             currentIndex: cubit.currentIndex,
-            onTap: (index){
+            onTap: (index) {
               cubit.changeBottomNaveBarIndex(index);
             },
-            items:cubit.bottomNavItems,
+            items: cubit.bottomNavItems,
           ),
         );
-      },);
+      },
+    );
   }
 }

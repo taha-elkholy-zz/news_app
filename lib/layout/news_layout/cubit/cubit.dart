@@ -6,6 +6,7 @@ import 'package:my_news_app/layout/news_layout/cubit/states.dart';
 import 'package:my_news_app/modules/business/business_screen.dart';
 import 'package:my_news_app/modules/science/science_screen.dart';
 import 'package:my_news_app/modules/sports/sports_screen.dart';
+import 'package:my_news_app/shared/network/local/cach_helper.dart';
 import 'package:my_news_app/shared/network/remote/dio_helper.dart';
 
 class NewsCubit extends Cubit<NewsStates> {
@@ -60,11 +61,25 @@ class NewsCubit extends Cubit<NewsStates> {
   ];
 
   // light & dark mode
-  bool isDark = false;
+  // true because the first time run
+  // the fromShared optional value = null
+  // and the changeAppMode enter to the else statement
+  // and reverse the value of isDark
+  bool isDark = true;
 
-  void changeAppMode() {
-    isDark = !isDark;
-    emit(NewsChangeModeState());
+  void changeAppMode({bool? fromShared}) {
+    if (fromShared != null) {
+      // her we get saved data from shared preferences
+      isDark = fromShared;
+      emit(NewsChangeModeState());
+    } else {
+      // her we just toggle between the 2 possibles
+      isDark = !isDark;
+      // save isDark value in shared preferences after edit the new value
+      CashHelper.putBoolean(key: 'isDark', value: isDark).then((value) {
+        emit(NewsChangeModeState());
+      });
+    }
   }
 
   // List of business articles

@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 
+// don't forget to init this class in your runApp method
 class DioHelper {
   // get a static object of the Dio
   static late Dio dio;
