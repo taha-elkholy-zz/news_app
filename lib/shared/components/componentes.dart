@@ -60,7 +60,7 @@ Widget buildArticleItem(context, article) => InkWell(
       ),
     );
 
-Widget articleBuilder(list) => ConditionalBuilder(
+Widget articleBuilder(list, {isSearch = false}) => ConditionalBuilder(
       condition: list.length > 0,
       builder: (context) {
         return ListView.separated(
@@ -80,9 +80,11 @@ Widget articleBuilder(list) => ConditionalBuilder(
           itemCount: list.length,
         );
       },
-      fallback: (context) => Center(
-        child: CircularProgressIndicator(),
-      ),
+      fallback: (context) => isSearch
+          ? Container()
+          : Center(
+              child: CircularProgressIndicator(),
+            ),
     );
 
 Widget defaultTextFormField({
@@ -100,26 +102,31 @@ Widget defaultTextFormField({
     TextFormField(
       controller: controller,
       keyboardType: inputType,
-      cursorColor: Colors.blue,
+      cursorColor: Colors.deepOrange,
       obscureText: obscure,
       onTap: onTap,
       onChanged: onchanged,
       textCapitalization: TextCapitalization.sentences,
-      style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
+      style: TextStyle(color: Colors.deepOrange, fontWeight: FontWeight.bold),
       decoration: InputDecoration(
         labelText: label,
-        labelStyle: TextStyle(color: Colors.grey),
+        labelStyle: TextStyle(color: Colors.deepOrange),
         prefixIcon: Icon(
           prefix,
-          color: Colors.grey,
+          color: Colors.deepOrange,
         ),
         suffixIcon: IconButton(icon: Icon(suffix), onPressed: onSuffixPressed),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
+          borderSide: BorderSide(color: Colors.deepOrange),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: BorderSide(color: Colors.deepOrange),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(color: Colors.grey),
+          borderSide: BorderSide(color: Colors.deepOrange),
         ),
       ),
       validator: validator,
