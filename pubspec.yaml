@@ -45,6 +45,9 @@ dependencies:
   # shared preference
   shared_preferences: ^2.0.7
 
+  # webView
+  webview_flutter: ^2.0.13
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
